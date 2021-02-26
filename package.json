@@ -9,6 +9,7 @@
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "@ffprobe-installer/ffprobe": "^1.1.0",
+    "node-fetch": "^2.6.1",
     "video-hash": "^1.0.0"
   },
   "devDependencies": {}

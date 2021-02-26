@@ -56,16 +56,26 @@ module.exports = async function (context, req) {
 
     /** First, we need to download the file locally as we can't stream to the video hash service */
     let response = await fetch(req.body.videourl);
+    if (response.status !== 200) {
+        context.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        return;
+    }
   
     /** Create a unique-ish filename */
-    let localFilename = new Date().toISOString().replace(/[-:.]/g,"") + path.extname(req.body.videourl);
+    let localFilename = process.env.tmp + '/' + new Date().toISOString().replace(/[-:.]/g,"") + path.extname(req.body.videourl);
+    context.log(`${localFilename} to create`);        
 
     // This works but will load the whole video into memory
     // let buff = await response.buffer();
     // fs.writeFileSync(localFilename, buff, "binary");
 
-    // Instead stream the file to disk 
-    await streamFile(response, localFilename);
+    try {
+        // Instead stream the file to disk 
+        await streamFile(response, localFilename);
+    } catch (ex) {
+        context.log(`Error ${localFilename}: ${ex}`);        
+    }
+
     context.log(`created ${localFilename}`);        
 
     let hash = '';
