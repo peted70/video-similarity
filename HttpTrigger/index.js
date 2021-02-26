@@ -42,15 +42,16 @@ function streamFile(res, filename) {
     });
 }
 
+/*
+    {
+        videourl: 'https://contentsimilaritystore.blob.core.windows.net/input/Big_Buck_Bunny_1080_10s_30MB.mp4',
+        hashbits: 8,
+        strength: 1
+    }
+*/
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
-    /*
-        {
-            videourl: 'https://contentsimilaritystore.blob.core.windows.net/input/Big_Buck_Bunny_1080_10s_30MB.mp4',
-            hashbits: 8,
-            strength: 1
-        }
-    */
+
     let startTime = performance.now();
 
     /** First, we need to download the file locally as we can't stream to the video hash service */
@@ -65,7 +66,7 @@ module.exports = async function (context, req) {
 
     // Instead stream the file to disk 
     await streamFile(response, localFilename);
-    console.log(`created ${localFilename}`);        
+    context.log(`created ${localFilename}`);        
 
     let hash = '';
     try {
@@ -77,10 +78,10 @@ module.exports = async function (context, req) {
         hash = await hashVideo(localFilename)
     } finally {
         await unlink(localFilename);
-        console.log(`deleted ${localFilename}`);        
+        context.log(`deleted ${localFilename}`);        
 
         let processingTime = performance.now() - startTime;
-        console.log(`processed ${req.body.videourl} in ${new Date(processingTime).toISOString().slice(11, -1)}`);
+        context.log(`processed ${req.body.videourl} in ${new Date(processingTime).toISOString().slice(11, -1)}`);
     }
 
     context.res = {
@@ -88,4 +89,3 @@ module.exports = async function (context, req) {
         body: hash
     };
 }
-
