@@ -2,7 +2,7 @@
 
 ![Postman](./images/postman.png)
 
-This sample represents a [node.js application running in an Azure Function](https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference-node?tabs=v2#node-version-and-package-management). The function will accept an HTTP POST with the body set as follows:
+This sample represents a [node.js application running in an Azure Function](https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference-node?tabs=v2#node-version-and-package-management). It uses [video-hash](https://www.npmjs.com/package/video-hash) npm package to generate a perceptual hash for an input video file. The function will accept an HTTP POST with the body set as follows:
 
 ```json
 {
